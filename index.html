@@ -1,0 +1,315 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
+  .page {
+    min-height: 100vh;
+    background: #050a0f;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    font-family: 'Share Tech Mono', monospace;
+    color: #00d4ff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .scanline {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+  }
+
+  .title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.4em;
+    color: rgba(0,212,255,0.4);
+    margin: 0 0 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .main-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    color: #00d4ff;
+    margin: 0 0 3rem;
+    text-shadow: 0 0 30px rgba(0,212,255,0.3);
+  }
+
+  .btn-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    width: 100%;
+    max-width: 620px;
+    z-index: 1;
+  }
+
+  .btn {
+    position: relative;
+    padding: 18px 20px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .btn:active { transform: scale(0.97); }
+
+  .btn-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    opacity: 0.6;
+    line-height: 1;
+  }
+
+  .btn-name {
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Orbitron', sans-serif;
+    line-height: 1;
+  }
+
+  .btn-corner {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+  }
+  .btn-corner.tl { top: 0; left: 0; border-top: 2px solid; border-left: 2px solid; }
+  .btn-corner.tr { top: 0; right: 0; border-top: 2px solid; border-right: 2px solid; }
+  .btn-corner.bl { bottom: 0; left: 0; border-bottom: 2px solid; border-left: 2px solid; }
+  .btn-corner.br { bottom: 0; right: 0; border-bottom: 2px solid; border-right: 2px solid; }
+
+  /* JARVIS button — hero */
+  .btn-jarvis {
+    background: rgba(0,212,255,0.06);
+    color: #00d4ff;
+    border: 1px solid rgba(0,212,255,0.25);
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 28px;
+  }
+  .btn-jarvis .btn-corner { border-color: #00d4ff; }
+  .btn-jarvis:hover {
+    background: rgba(0,212,255,0.12);
+    border-color: rgba(0,212,255,0.7);
+    box-shadow: 0 0 24px rgba(0,212,255,0.2), inset 0 0 16px rgba(0,212,255,0.05);
+  }
+  .jarvis-left { display: flex; flex-direction: column; gap: 4px; }
+  .jarvis-arc {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .jarvis-arc-ring {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,212,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .jarvis-arc-ring::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,212,255,0.5);
+    border-top-color: #00d4ff;
+    animation: spin 2s linear infinite;
+  }
+  .jarvis-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00d4ff;
+    box-shadow: 0 0 8px #00d4ff;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+  .jarvis-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    color: #00d4ff;
+    text-shadow: 0 0 20px rgba(0,212,255,0.5);
+  }
+  .jarvis-url {
+    font-size: 10px;
+    color: rgba(0,212,255,0.4);
+    letter-spacing: 0.12em;
+  }
+  .btn-jarvis .btn-corner { border-color: #00d4ff; }
+
+  /* Standard buttons */
+  .btn-secondary {
+    background: rgba(255,255,255,0.02);
+    color: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .btn-secondary .btn-corner { border-color: rgba(255,255,255,0.3); }
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.85);
+  }
+
+  .btn-amber {
+    background: rgba(186,117,23,0.06);
+    color: #EF9F27;
+    border: 1px solid rgba(186,117,23,0.2);
+  }
+  .btn-amber .btn-corner { border-color: #EF9F27; }
+  .btn-amber:hover {
+    background: rgba(186,117,23,0.12);
+    border-color: rgba(239,159,39,0.6);
+    box-shadow: 0 0 16px rgba(239,159,39,0.15);
+  }
+
+  .btn-red {
+    background: rgba(163,45,45,0.06);
+    color: #E24B4A;
+    border: 1px solid rgba(163,45,45,0.2);
+  }
+  .btn-red .btn-corner { border-color: #E24B4A; }
+  .btn-red:hover {
+    background: rgba(163,45,45,0.12);
+    border-color: rgba(226,75,74,0.6);
+    box-shadow: 0 0 16px rgba(226,75,74,0.15);
+  }
+
+  .status-bar {
+    display: flex;
+    gap: 24px;
+    margin-top: 3rem;
+    z-index: 1;
+  }
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: rgba(0,212,255,0.3);
+  }
+  .status-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #00d4ff;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .status-dot.amber { background: #EF9F27; animation-delay: 0.5s; }
+  .status-dot.off { background: rgba(255,255,255,0.15); animation: none; }
+</style>
+
+<div class="page">
+  <div class="grid-bg"></div>
+  <div class="scanline"></div>
+
+  <p class="title">Système de navigation</p>
+  <h1 class="main-title">CONTROL PANEL</h1>
+
+  <div class="btn-grid">
+
+    <button class="btn btn-jarvis" onclick="window.open('https://magilrabit.github.io/jarvis', '_blank')">
+      <div class="btn-corner tl"></div>
+      <div class="btn-corner tr"></div>
+      <div class="btn-corner bl"></div>
+      <div class="btn-corner br"></div>
+      <div class="jarvis-left">
+        <span class="btn-label">magilrabit.github.io</span>
+        <span class="jarvis-name">JARVIS</span>
+        <span class="jarvis-url">intelligence artificielle · interface</span>
+      </div>
+      <div class="jarvis-arc">
+        <div class="jarvis-arc-ring">
+          <div class="jarvis-dot"></div>
+        </div>
+      </div>
+    </button>
+
+    <button class="btn btn-secondary">
+      <div class="btn-corner tl"></div>
+      <div class="btn-corner tr"></div>
+      <div class="btn-corner bl"></div>
+      <div class="btn-corner br"></div>
+      <span class="btn-label">Module 01</span>
+      <span class="btn-name">ARCHIVE</span>
+    </button>
+
+    <button class="btn btn-secondary">
+      <div class="btn-corner tl"></div>
+      <div class="btn-corner tr"></div>
+      <div class="btn-corner bl"></div>
+      <div class="btn-corner br"></div>
+      <span class="btn-label">Module 02</span>
+      <span class="btn-name">RÉSEAU</span>
+    </button>
+
+    <button class="btn btn-amber">
+      <div class="btn-corner tl"></div>
+      <div class="btn-corner tr"></div>
+      <div class="btn-corner bl"></div>
+      <div class="btn-corner br"></div>
+      <span class="btn-label">Alerte</span>
+      <span class="btn-name">DIAGNOSTICS</span>
+    </button>
+
+    <button class="btn btn-red">
+      <div class="btn-corner tl"></div>
+      <div class="btn-corner tr"></div>
+      <div class="btn-corner bl"></div>
+      <div class="btn-corner br"></div>
+      <span class="btn-label">Critique</span>
+      <span class="btn-name">ARRÊT</span>
+    </button>
+
+  </div>
+
+  <div class="status-bar">
+    <div class="status-item"><div class="status-dot"></div>JARVIS EN LIGNE</div>
+    <div class="status-item"><div class="status-dot amber"></div>DIAGNOSTICS</div>
+    <div class="status-item"><div class="status-dot off"></div>ARRÊT HORS LIGNE</div>
+  </div>
+</div>
