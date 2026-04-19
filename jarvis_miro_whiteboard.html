@@ -1,0 +1,327 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+#japp{width:100%;height:640px;display:flex;flex-direction:column;background:#0a0e14;border-radius:12px;overflow:hidden;border:1px solid #0ff3;font-family:var(--font-mono,monospace)}
+#jtoolbar{display:flex;align-items:center;gap:4px;padding:6px 10px;background:#0d1219;border-bottom:1px solid #0ff2;flex-wrap:wrap}
+.jbtn{padding:4px 10px;font-size:11px;font-family:var(--font-mono,monospace);border:1px solid #0ff3;background:transparent;color:#0ff;border-radius:4px;cursor:pointer;letter-spacing:.05em;transition:background .12s,color .12s}
+.jbtn:hover{background:#0ff1;color:#fff}
+.jbtn.act{background:#0ff;color:#0a0e14;border-color:#0ff}
+.jsep{width:1px;height:18px;background:#0ff2;margin:0 2px}
+#jcanvas-wrap{flex:1;position:relative;overflow:hidden;cursor:crosshair}
+#jcanvas{position:absolute;top:0;left:0}
+#jstatus{display:flex;align-items:center;gap:12px;padding:4px 10px;background:#0d1219;border-top:1px solid #0ff2;font-size:10px;color:#0ff8;letter-spacing:.08em}
+.jdot{width:6px;height:6px;border-radius:50%;background:#0ff;animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+#jpanel{position:absolute;right:10px;bottom:10px;width:280px;background:#0d1219;border-radius:8px;border:1px solid #0ff3;display:flex;flex-direction:column;max-height:260px;z-index:20}
+#jphead{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-bottom:1px solid #0ff2}
+#jptitle{font-size:11px;font-weight:500;color:#0ff;letter-spacing:.1em;display:flex;align-items:center;gap:6px;font-family:var(--font-mono,monospace)}
+#jpmsgs{flex:1;overflow-y:auto;padding:6px 8px;font-size:11px;display:flex;flex-direction:column;gap:5px;min-height:70px;font-family:var(--font-mono,monospace)}
+.mu{align-self:flex-end;background:#0ff2;color:#0ff;padding:4px 8px;border-radius:6px 6px 2px 6px;max-width:90%;border:1px solid #0ff3}
+.ma{align-self:flex-start;background:#153;color:#0f9;padding:4px 8px;border-radius:6px 6px 6px 2px;max-width:90%;border:1px solid #0f93}
+#jpinrow{display:flex;gap:5px;padding:6px;border-top:1px solid #0ff2}
+#jpinput{flex:1;font-size:11px;padding:4px 7px;border-radius:4px;border:1px solid #0ff3;background:#0a0e14;color:#0ff;font-family:var(--font-mono,monospace)}
+#jpinput::placeholder{color:#0ff5}
+#jpsend{padding:4px 9px;font-size:11px;background:#0ff;color:#0a0e14;border:none;border-radius:4px;cursor:pointer;font-family:var(--font-mono,monospace);font-weight:500}
+#jptog{font-size:10px;color:#0ff7;cursor:pointer;padding:1px 5px;border:1px solid #0ff2;border-radius:4px;background:transparent}
+#japikrow{display:flex;gap:4px;padding:0 6px 4px;border-bottom:1px solid #0ff1}
+#japiinput{flex:1;font-size:10px;padding:3px 6px;border-radius:4px;border:1px solid #0ff2;background:#0a0e14;color:#0ff7;font-family:var(--font-mono,monospace)}
+#japiinput::placeholder{color:#0ff4}
+#japisave{font-size:10px;padding:3px 7px;background:transparent;border:1px solid #0ff3;border-radius:4px;cursor:pointer;color:#0ff;font-family:var(--font-mono,monospace)}
+#jzoom{font-size:10px;color:#0ff7;letter-spacing:.05em;min-width:36px;text-align:center}
+</style>
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden">Tableau blanc style Jarvis connecté à l'IA Claude</h2>
+
+<div id="japp">
+  <div id="jtoolbar">
+    <span style="font-size:10px;color:#0ff;letter-spacing:.12em;margin-right:4px">J.A.R.V.I.S</span>
+    <div class="jsep"></div>
+    <button class="jbtn act" id="t-select" onclick="setTool('select')">SELECT</button>
+    <button class="jbtn" id="t-pen" onclick="setTool('pen')">PEN</button>
+    <button class="jbtn" id="t-rect" onclick="setTool('rect')">RECT</button>
+    <button class="jbtn" id="t-arrow" onclick="setTool('arrow')">ARROW</button>
+    <button class="jbtn" id="t-note" onclick="setTool('note')">NOTE</button>
+    <button class="jbtn" id="t-text" onclick="setTool('text')">TEXT</button>
+    <div class="jsep"></div>
+    <input type="color" id="jcolor" value="#00ffff" style="width:22px;height:22px;border-radius:50%;border:1px solid #0ff3;cursor:pointer;padding:0;background:transparent">
+    <input type="range" id="jsize" min="1" max="16" value="2" step="1" style="width:55px">
+    <div class="jsep"></div>
+    <button class="jbtn" onclick="undoLast()">UNDO</button>
+    <button class="jbtn" onclick="clearAll()">CLEAR</button>
+    <div class="jsep"></div>
+    <span id="jzoom">100%</span>
+    <button class="jbtn" onclick="doZoom(1.2)">+</button>
+    <button class="jbtn" onclick="doZoom(0.8)">−</button>
+    <div class="jsep"></div>
+    <button class="jbtn" onclick="askCanvas()" style="border-color:#0f9;color:#0f9">ANALYZE</button>
+  </div>
+
+  <div id="jcanvas-wrap">
+    <canvas id="jcanvas"></canvas>
+    <div id="jpanel">
+      <div id="jphead">
+        <div id="jptitle"><div class="jdot"></div>JARVIS AI</div>
+        <button id="jptog" onclick="togglePanel()">−</button>
+      </div>
+      <div id="japikrow">
+        <input type="password" id="japiinput" placeholder="API key Anthropic (sk-ant-...)">
+        <button id="japisave" onclick="saveKey()">SET</button>
+      </div>
+      <div id="jpmsgs">
+        <div class="ma">Systèmes en ligne. Clé API requise, monsieur. Entrez sk-ant-... ci-dessus.</div>
+      </div>
+      <div id="jpinrow">
+        <input id="jpinput" placeholder="Parlez à Jarvis..." onkeydown="if(event.key==='Enter')sendMsg()">
+        <button id="jpsend" onclick="sendMsg()">►</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="jstatus">
+    <div class="jdot"></div>
+    <span id="jtoolname">MODE: SELECT</span>
+    <span style="opacity:.4">|</span>
+    <span id="jcoords">X:0 Y:0</span>
+    <span style="opacity:.4">|</span>
+    <span id="jobjcount">OBJECTS: 0</span>
+    <span style="opacity:.4">|</span>
+    <span id="jsystime">--:--:--</span>
+  </div>
+</div>
+
+<script>
+let tool='select',drawing=false,paths=[],notes=[],undoStack=[];
+let startX=0,startY=0,lastX=0,lastY=0;
+let zoom=1,panX=0,panY=0,isPanning=false,panSX=0,panSY=0;
+let dragNote=null,dragOX=0,dragOY=0;
+let apiKey='',panelOpen=true;
+
+const canvas=document.getElementById('jcanvas');
+const ctx=canvas.getContext('2d');
+const wrap=document.getElementById('jcanvas-wrap');
+
+function resize(){canvas.width=wrap.clientWidth;canvas.height=wrap.clientHeight;redraw()}
+window.addEventListener('resize',resize);
+setTimeout(resize,100);
+
+setInterval(()=>{
+  const n=new Date();
+  document.getElementById('jsystime').textContent=
+    n.getHours().toString().padStart(2,'0')+':'+
+    n.getMinutes().toString().padStart(2,'0')+':'+
+    n.getSeconds().toString().padStart(2,'0');
+},1000);
+
+function setTool(t){
+  tool=t;
+  document.querySelectorAll('.jbtn[id^="t-"]').forEach(b=>b.classList.remove('act'));
+  const b=document.getElementById('t-'+t);
+  if(b)b.classList.add('act');
+  canvas.style.cursor=t==='select'?'default':'crosshair';
+  document.getElementById('jtoolname').textContent='MODE: '+t.toUpperCase();
+}
+
+function getColor(){return document.getElementById('jcolor').value}
+function getSize(){return parseInt(document.getElementById('jsize').value)||2}
+
+function toCanvas(ex,ey){
+  const r=canvas.getBoundingClientRect();
+  return[(ex-r.left-panX)/zoom,(ey-r.top-panY)/zoom];
+}
+
+canvas.addEventListener('mousemove',e=>{
+  const[cx,cy]=toCanvas(e.clientX,e.clientY);
+  document.getElementById('jcoords').textContent='X:'+Math.round(cx)+' Y:'+Math.round(cy);
+  if(isPanning){panX=e.clientX-panSX;panY=e.clientY-panSY;redraw();return}
+  if(dragNote){dragNote.x=cx-dragOX;dragNote.y=cy-dragOY;redraw();return}
+  if(!drawing)return;
+  if(tool==='pen'){paths[paths.length-1].pts.push([cx,cy]);redraw()}
+  else{lastX=cx;lastY=cy;redraw();drawPreview(startX,startY,cx,cy)}
+});
+
+canvas.addEventListener('mousedown',e=>{
+  const[cx,cy]=toCanvas(e.clientX,e.clientY);
+  if(e.button===1||(e.button===0&&tool==='select')){
+    const hn=hitNote(cx,cy);
+    if(hn&&tool==='select'){dragNote=hn;dragOX=cx-hn.x;dragOY=cy-hn.y;return}
+    isPanning=true;panSX=e.clientX-panX;panSY=e.clientY-panY;return;
+  }
+  drawing=true;startX=cx;startY=cy;lastX=cx;lastY=cy;
+  if(tool==='pen'){paths.push({type:'pen',pts:[[cx,cy]],color:getColor(),size:getSize()})}
+  else if(tool==='note'){
+    const nc={x:cx,y:cy,w:130,h:75,text:'[NOTE]',id:Date.now(),color:'#0ff'};
+    notes.push(nc);drawing=false;redraw();
+    setTimeout(()=>{const t=prompt('Contenu de la note:','[NOTE]');if(t!==null)nc.text=t;redraw()},50);
+  }
+  else if(tool==='text'){
+    const t=prompt('Texte:','');
+    if(t)paths.push({type:'text',x:cx,y:cy,text:t,color:getColor(),size:getSize()*5+10});
+    drawing=false;redraw();
+  }
+});
+
+canvas.addEventListener('mouseup',e=>{
+  if(isPanning){isPanning=false;return}
+  if(dragNote){dragNote=null;return}
+  if(!drawing)return;
+  drawing=false;
+  const[cx,cy]=toCanvas(e.clientX,e.clientY);
+  if(tool==='rect')paths.push({type:'rect',x:startX,y:startY,w:cx-startX,h:cy-startY,color:getColor(),size:getSize()});
+  else if(tool==='arrow')paths.push({type:'arrow',x1:startX,y1:startY,x2:cx,y2:cy,color:getColor(),size:getSize()});
+  updateCount();redraw();
+});
+
+canvas.addEventListener('dblclick',e=>{
+  const[cx,cy]=toCanvas(e.clientX,e.clientY);
+  const n=hitNote(cx,cy);
+  if(n){const t=prompt('Modifier la note:',n.text);if(t!==null){n.text=t;redraw()}}
+});
+
+canvas.addEventListener('wheel',e=>{
+  e.preventDefault();
+  zoom=Math.min(4,Math.max(0.15,zoom*(e.deltaY>0?0.88:1.12)));
+  document.getElementById('jzoom').textContent=Math.round(zoom*100)+'%';
+  redraw();
+},{passive:false});
+
+function hitNote(cx,cy){return notes.find(n=>cx>=n.x&&cx<=n.x+n.w&&cy>=n.y&&cy<=n.y+n.h)||null}
+
+function drawPreview(x1,y1,x2,y2){
+  ctx.save();ctx.translate(panX,panY);ctx.scale(zoom,zoom);
+  ctx.strokeStyle=getColor();ctx.lineWidth=getSize()/zoom;ctx.setLineDash([4,3]);
+  if(tool==='rect')ctx.strokeRect(x1,y1,x2-x1,y2-y1);
+  else if(tool==='arrow'){
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+    const a=Math.atan2(y2-y1,x2-x1),L=10/zoom;
+    ctx.beginPath();ctx.moveTo(x2,y2);
+    ctx.lineTo(x2-L*Math.cos(a-.4),y2-L*Math.sin(a-.4));
+    ctx.lineTo(x2-L*Math.cos(a+.4),y2-L*Math.sin(a+.4));
+    ctx.closePath();ctx.fillStyle=getColor();ctx.fill();
+  }
+  ctx.setLineDash([]);ctx.restore();
+}
+
+function redraw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.save();ctx.translate(panX,panY);ctx.scale(zoom,zoom);
+  const gs=40,ox=(-panX/zoom)%gs,oy=(-panY/zoom)%gs;
+  ctx.strokeStyle='rgba(0,255,255,0.07)';ctx.lineWidth=.5/zoom;
+  for(let x=-ox-gs;x<canvas.width/zoom+gs;x+=gs){ctx.beginPath();ctx.moveTo(x,-panY/zoom);ctx.lineTo(x,(canvas.height-panY)/zoom);ctx.stroke()}
+  for(let y=-oy-gs;y<canvas.height/zoom+gs;y+=gs){ctx.beginPath();ctx.moveTo(-panX/zoom,y);ctx.lineTo((canvas.width-panX)/zoom,y);ctx.stroke()}
+
+  for(const p of paths){
+    ctx.strokeStyle=p.color||'#0ff';ctx.fillStyle=p.color||'#0ff';
+    ctx.lineWidth=(p.size||2)/zoom;ctx.lineCap='round';ctx.lineJoin='round';
+    if(p.type==='pen'&&p.pts.length>1){
+      ctx.beginPath();ctx.moveTo(p.pts[0][0],p.pts[0][1]);
+      for(let i=1;i<p.pts.length;i++)ctx.lineTo(p.pts[i][0],p.pts[i][1]);
+      ctx.stroke();
+    } else if(p.type==='rect'){
+      ctx.strokeRect(p.x,p.y,p.w,p.h);
+      ctx.fillStyle=p.color+'18';ctx.fillRect(p.x,p.y,p.w,p.h);
+    } else if(p.type==='arrow'){
+      ctx.beginPath();ctx.moveTo(p.x1,p.y1);ctx.lineTo(p.x2,p.y2);ctx.stroke();
+      const a=Math.atan2(p.y2-p.y1,p.x2-p.x1),L=12/zoom;
+      ctx.beginPath();ctx.moveTo(p.x2,p.y2);
+      ctx.lineTo(p.x2-L*Math.cos(a-.4),p.y2-L*Math.sin(a-.4));
+      ctx.lineTo(p.x2-L*Math.cos(a+.4),p.y2-L*Math.sin(a+.4));
+      ctx.closePath();ctx.fill();
+    } else if(p.type==='text'){
+      ctx.font=(p.size||14)/zoom+'px monospace';ctx.fillText(p.text,p.x,p.y);
+    }
+  }
+
+  for(const n of notes){
+    ctx.strokeStyle=n.color||'#0ff';ctx.lineWidth=1/zoom;
+    ctx.fillStyle='rgba(0,20,30,0.85)';
+    ctx.beginPath();
+    const r=6/zoom;
+    ctx.moveTo(n.x+r,n.y);ctx.lineTo(n.x+n.w-r,n.y);ctx.quadraticCurveTo(n.x+n.w,n.y,n.x+n.w,n.y+r);
+    ctx.lineTo(n.x+n.w,n.y+n.h-r);ctx.quadraticCurveTo(n.x+n.w,n.y+n.h,n.x+n.w-r,n.y+n.h);
+    ctx.lineTo(n.x+r,n.y+n.h);ctx.quadraticCurveTo(n.x,n.y+n.h,n.x,n.y+n.h-r);
+    ctx.lineTo(n.x,n.y+r);ctx.quadraticCurveTo(n.x,n.y,n.x+r,n.y);ctx.closePath();
+    ctx.fill();ctx.stroke();
+    ctx.fillStyle=n.color||'#0ff';ctx.font=11/zoom+'px monospace';
+    const lines=n.text.match(/.{1,18}/g)||[n.text];
+    lines.slice(0,4).forEach((l,i)=>ctx.fillText(l,n.x+8/zoom,n.y+(16+i*14)/zoom));
+  }
+  ctx.restore();
+}
+
+function updateCount(){
+  document.getElementById('jobjcount').textContent='OBJECTS: '+(paths.length+notes.length);
+}
+
+function undoLast(){
+  if(paths.length)paths.pop();else if(notes.length)notes.pop();
+  updateCount();redraw();
+}
+
+function clearAll(){
+  if(confirm('Effacer tout le tableau?')){paths=[];notes=[];updateCount();redraw()}
+}
+
+function doZoom(f){
+  zoom=Math.min(4,Math.max(0.15,zoom*f));
+  document.getElementById('jzoom').textContent=Math.round(zoom*100)+'%';
+  redraw();
+}
+
+function togglePanel(){
+  panelOpen=!panelOpen;
+  const el=document.getElementById('jpanel');
+  el.style.maxHeight=panelOpen?'260px':'36px';
+  document.getElementById('jptog').textContent=panelOpen?'−':'+';
+}
+
+function saveKey(){
+  apiKey=document.getElementById('japiinput').value.trim();
+  if(apiKey){
+    document.getElementById('japiinput').value='';
+    addMsg('ma','Clé API enregistrée. Systèmes Jarvis opérationnels, monsieur.');
+  }
+}
+
+function addMsg(cls,txt){
+  const d=document.getElementById('jpmsgs');
+  const m=document.createElement('div');
+  m.className=cls;m.textContent=txt;
+  d.appendChild(m);d.scrollTop=d.scrollHeight;
+}
+
+async function sendMsg(){
+  const inp=document.getElementById('jpinput');
+  const msg=inp.value.trim();if(!msg)return;
+  inp.value='';
+  addMsg('mu',msg);
+  if(!apiKey){addMsg('ma','Clé API manquante. Entrez sk-ant-... ci-dessus, monsieur.');return}
+  addMsg('ma','...');
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:400,
+        system:'Tu es J.A.R.V.I.S., l\'assistant IA de Tony Stark. Réponds de façon concise, élégante, avec une touche d\'humour britannique. Tu peux commencer par "Bien sûr, monsieur." ou "Comme vous le souhaitez." Max 3 phrases.',
+        messages:[{role:'user',content:msg}]
+      })
+    });
+    const data=await res.json();
+    const msgs=document.getElementById('jpmsgs');
+    msgs.removeChild(msgs.lastChild);
+    const reply=data.content?.[0]?.text||'Erreur de réponse';
+    addMsg('ma',reply);
+  }catch(e){
+    const msgs=document.getElementById('jpmsgs');
+    msgs.removeChild(msgs.lastChild);
+    addMsg('ma','Erreur de connexion aux systèmes Stark.');
+  }
+}
+
+function askCanvas(){
+  const obj=paths.length+notes.length;
+  const msg='Jarvis, analyse mon tableau blanc: '+obj+' objets dessinés dont '+paths.filter(p=>p.type==='text').length+' textes, '+notes.length+' notes, '+paths.filter(p=>p.type==='pen').length+' tracés à main levée, '+paths.filter(p=>p.type==='rect').length+' rectangles et '+paths.filter(p=>p.type==='arrow').length+' flèches.';
+  document.getElementById('jpinput').value=msg;
+  sendMsg();
+}
+</script>

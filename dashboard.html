@@ -1,0 +1,290 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Share+Tech+Mono&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+.jv{background:#030b10;font-family:'Share Tech Mono',monospace;color:#00d4ff;padding:24px;border-radius:12px;min-height:700px;position:relative;overflow:hidden}
+.jv-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.025) 1px,transparent 1px);background-size:36px 36px;pointer-events:none}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding-bottom:18px;border-bottom:1px solid rgba(0,212,255,0.1);margin-bottom:22px}
+.hdr-logo{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:900;letter-spacing:0.25em}
+.hdr-mid{display:flex;gap:20px}
+.hdr-stat{text-align:center}
+.hdr-stat-val{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;line-height:1}
+.hdr-stat-lbl{font-size:9px;letter-spacing:0.18em;color:rgba(0,212,255,0.35);margin-top:3px}
+.hdr-right{display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:0.15em;color:rgba(0,212,255,0.4)}
+.pulse{width:7px;height:7px;border-radius:50%;background:#00d4ff;animation:jvp 1.8s ease-in-out infinite}
+@keyframes jvp{0%,100%{opacity:1}50%{opacity:0.2}}
+
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.mc{background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.12);padding:14px 16px;position:relative;overflow:hidden}
+.mc::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%}
+.mc.cyan::before{background:#00d4ff}
+.mc.amber::before{background:#EF9F27}
+.mc.green::before{background:#5DCAA5}
+.mc.red::before{background:#E24B4A}
+.mc-val{font-family:'Orbitron',sans-serif;font-size:26px;font-weight:900;line-height:1;margin-bottom:4px}
+.mc.cyan .mc-val{color:#00d4ff}
+.mc.amber .mc-val{color:#EF9F27}
+.mc.green .mc-val{color:#5DCAA5}
+.mc.red .mc-val{color:#E24B4A}
+.mc-lbl{font-size:9px;letter-spacing:0.18em;color:rgba(0,212,255,0.35)}
+.mc-sub{font-size:10px;color:rgba(0,212,255,0.25);margin-top:6px}
+
+.main-grid{display:grid;grid-template-columns:1fr 280px;gap:16px;margin-bottom:16px}
+
+.sec-label{font-size:9px;letter-spacing:0.22em;color:rgba(0,212,255,0.35);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.sec-label::after{content:'';flex:1;height:1px;background:rgba(0,212,255,0.08)}
+
+.proj-list{display:flex;flex-direction:column;gap:10px}
+.proj{background:rgba(0,212,255,0.03);border:1px solid rgba(0,212,255,0.1);padding:14px 16px;cursor:pointer;transition:all 0.15s;position:relative}
+.proj:hover{background:rgba(0,212,255,0.07);border-color:rgba(0,212,255,0.3)}
+.proj.selected{border-color:rgba(0,212,255,0.5);background:rgba(0,212,255,0.08)}
+.proj-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.proj-name{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.1em}
+.badge{font-size:9px;letter-spacing:0.12em;padding:3px 10px;border-radius:2px}
+.badge.active{background:rgba(93,202,165,0.15);color:#5DCAA5;border:1px solid rgba(93,202,165,0.3)}
+.badge.review{background:rgba(239,159,39,0.15);color:#EF9F27;border:1px solid rgba(239,159,39,0.3)}
+.badge.hold{background:rgba(226,75,74,0.15);color:#E24B4A;border:1px solid rgba(226,75,74,0.3)}
+.badge.done{background:rgba(0,212,255,0.1);color:rgba(0,212,255,0.6);border:1px solid rgba(0,212,255,0.2)}
+.proj-bar-wrap{height:4px;background:rgba(0,212,255,0.08);position:relative;overflow:hidden;border-radius:2px}
+.proj-bar{height:100%;border-radius:2px;transition:width 0.6s ease}
+.proj-bar.cyan{background:#00d4ff}
+.proj-bar.amber{background:#EF9F27}
+.proj-bar.green{background:#5DCAA5}
+.proj-bar.red{background:#E24B4A}
+.proj-meta{display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:rgba(0,212,255,0.3)}
+
+.right-col{display:flex;flex-direction:column;gap:16px}
+.panel{background:rgba(0,212,255,0.03);border:1px solid rgba(0,212,255,0.1);padding:16px}
+
+.team-list{display:flex;flex-direction:column;gap:8px}
+.member{display:flex;align-items:center;gap:10px}
+.avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;border:1px solid rgba(0,212,255,0.2)}
+.av-cyan{background:rgba(0,212,255,0.12);color:#00d4ff}
+.av-amber{background:rgba(239,159,39,0.12);color:#EF9F27}
+.av-green{background:rgba(93,202,165,0.12);color:#5DCAA5}
+.av-pink{background:rgba(212,83,126,0.12);color:#D4537E}
+.member-info{flex:1;min-width:0}
+.member-name{font-size:11px;color:rgba(0,212,255,0.8)}
+.member-role{font-size:9px;letter-spacing:0.1em;color:rgba(0,212,255,0.3)}
+.member-tasks{font-size:10px;color:rgba(0,212,255,0.4);white-space:nowrap}
+
+.activity{display:flex;flex-direction:column;gap:8px;max-height:160px;overflow:hidden}
+.act{display:flex;gap:10px;font-size:10px;line-height:1.5}
+.act-time{color:rgba(0,212,255,0.25);white-space:nowrap;min-width:36px}
+.act-dot{width:6px;height:6px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.act-text{color:rgba(0,212,255,0.55)}
+.act-text span{color:rgba(0,212,255,0.85)}
+
+.tasks-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.task-col{background:rgba(0,212,255,0.03);border:1px solid rgba(0,212,255,0.08);padding:12px}
+.task-col-hdr{font-size:9px;letter-spacing:0.18em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(0,212,255,0.08)}
+.task-col-hdr.todo{color:rgba(0,212,255,0.4)}
+.task-col-hdr.prog{color:#EF9F27}
+.task-col-hdr.done2{color:#5DCAA5}
+.task-item{font-size:10px;padding:7px 10px;background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.07);margin-bottom:6px;color:rgba(0,212,255,0.65);line-height:1.4;cursor:default;transition:border-color 0.15s}
+.task-item:hover{border-color:rgba(0,212,255,0.2);color:rgba(0,212,255,0.9)}
+.task-item:last-child{margin-bottom:0}
+.task-tag{font-size:8px;letter-spacing:0.1em;color:rgba(0,212,255,0.3);display:block;margin-top:3px}
+
+.btn-row{display:flex;gap:8px;margin-top:16px}
+.jv-btn{flex:1;padding:10px;background:transparent;border:1px solid rgba(0,212,255,0.2);color:rgba(0,212,255,0.5);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.15em;cursor:pointer;transition:all 0.15s}
+.jv-btn:hover{border-color:rgba(0,212,255,0.5);color:#00d4ff;background:rgba(0,212,255,0.06)}
+.jv-btn.primary{border-color:rgba(0,212,255,0.4);color:#00d4ff;background:rgba(0,212,255,0.08)}
+.jv-btn.primary:hover{background:rgba(0,212,255,0.15)}
+
+.mini-chart{display:flex;align-items:flex-end;gap:4px;height:40px;margin-top:8px}
+.bar-c{flex:1;background:rgba(0,212,255,0.15);border-radius:1px;position:relative;transition:background 0.2s}
+.bar-c:hover{background:rgba(0,212,255,0.3)}
+.bar-c-lbl{font-size:8px;color:rgba(0,212,255,0.2);text-align:center;margin-top:3px}
+</style>
+
+<h2 style="position:absolute;width:1px;height:1px;overflow:hidden">Dashboard de suivi de projets dev style Jarvis</h2>
+
+<div class="jv">
+<div class="jv-grid-bg"></div>
+
+<div class="hdr">
+  <div class="hdr-logo">J.A.R.V.I.S — DEV OPS</div>
+  <div class="hdr-mid">
+    <div class="hdr-stat"><div class="hdr-stat-val" style="color:#5DCAA5">6</div><div class="hdr-stat-lbl">PROJETS ACTIFS</div></div>
+    <div style="width:1px;background:rgba(0,212,255,0.1)"></div>
+    <div class="hdr-stat"><div class="hdr-stat-val">24</div><div class="hdr-stat-lbl">TÂCHES EN COURS</div></div>
+    <div style="width:1px;background:rgba(0,212,255,0.1)"></div>
+    <div class="hdr-stat"><div class="hdr-stat-val" style="color:#EF9F27">3</div><div class="hdr-stat-lbl">ALERTES</div></div>
+  </div>
+  <div class="hdr-right"><div class="pulse"></div>SYNC · <span id="clock">--:--:--</span></div>
+</div>
+
+<div class="metrics">
+  <div class="mc cyan">
+    <div class="mc-val">78%</div>
+    <div class="mc-lbl">AVANCEMENT GLOBAL</div>
+    <div class="mc-sub">+4% cette semaine</div>
+  </div>
+  <div class="mc green">
+    <div class="mc-val">12</div>
+    <div class="mc-lbl">COMMITS AUJOURD'HUI</div>
+    <div class="mc-sub">4 développeurs actifs</div>
+  </div>
+  <div class="mc amber">
+    <div class="mc-val">5</div>
+    <div class="mc-lbl">BUGS OUVERTS</div>
+    <div class="mc-sub">2 critiques</div>
+  </div>
+  <div class="mc red">
+    <div class="mc-val">J+8</div>
+    <div class="mc-lbl">DEADLINE LA PLUS PROCHE</div>
+    <div class="mc-sub">Projet NOVA · risque élevé</div>
+  </div>
+</div>
+
+<div class="main-grid">
+  <div>
+    <div class="sec-label">PROJETS</div>
+    <div class="proj-list">
+      <div class="proj selected" onclick="selectProj(this)">
+        <div class="proj-top">
+          <div class="proj-name">NOVA — Interface IA</div>
+          <span class="badge active">EN COURS</span>
+        </div>
+        <div class="proj-bar-wrap"><div class="proj-bar cyan" style="width:82%"></div></div>
+        <div class="proj-meta"><span>82% complété</span><span>React · Node</span><span>J+8</span></div>
+      </div>
+      <div class="proj" onclick="selectProj(this)">
+        <div class="proj-top">
+          <div class="proj-name">ATLAS — API REST</div>
+          <span class="badge review">EN REVIEW</span>
+        </div>
+        <div class="proj-bar-wrap"><div class="proj-bar amber" style="width:65%"></div></div>
+        <div class="proj-meta"><span>65% complété</span><span>Python · FastAPI</span><span>J+21</span></div>
+      </div>
+      <div class="proj" onclick="selectProj(this)">
+        <div class="proj-top">
+          <div class="proj-name">HELIX — Dashboard</div>
+          <span class="badge active">EN COURS</span>
+        </div>
+        <div class="proj-bar-wrap"><div class="proj-bar green" style="width:91%"></div></div>
+        <div class="proj-meta"><span>91% complété</span><span>Vue · D3.js</span><span>J+3</span></div>
+      </div>
+      <div class="proj" onclick="selectProj(this)">
+        <div class="proj-top">
+          <div class="proj-name">PRISM — Auth module</div>
+          <span class="badge hold">EN ATTENTE</span>
+        </div>
+        <div class="proj-bar-wrap"><div class="proj-bar red" style="width:38%"></div></div>
+        <div class="proj-meta"><span>38% complété</span><span>Go · OAuth2</span><span>J+45</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-col">
+    <div class="panel">
+      <div class="sec-label">ÉQUIPE</div>
+      <div class="team-list">
+        <div class="member">
+          <div class="avatar av-cyan">MR</div>
+          <div class="member-info"><div class="member-name">M. Rabit</div><div class="member-role">LEAD DEV</div></div>
+          <div class="member-tasks">7 tâches</div>
+        </div>
+        <div class="member">
+          <div class="avatar av-amber">AL</div>
+          <div class="member-info"><div class="member-name">A. Leroy</div><div class="member-role">BACKEND</div></div>
+          <div class="member-tasks">5 tâches</div>
+        </div>
+        <div class="member">
+          <div class="avatar av-green">SK</div>
+          <div class="member-info"><div class="member-name">S. Kone</div><div class="member-role">FRONTEND</div></div>
+          <div class="member-tasks">6 tâches</div>
+        </div>
+        <div class="member">
+          <div class="avatar av-pink">ND</div>
+          <div class="member-info"><div class="member-name">N. Diop</div><div class="member-role">DEVOPS</div></div>
+          <div class="member-tasks">4 tâches</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="sec-label">ACTIVITÉ RÉCENTE</div>
+      <div class="activity">
+        <div class="act"><div class="act-time">09:41</div><div class="act-dot" style="background:#5DCAA5"></div><div class="act-text"><span>MR</span> push sur <span>main</span> · NOVA</div></div>
+        <div class="act"><div class="act-time">09:12</div><div class="act-dot" style="background:#EF9F27"></div><div class="act-text"><span>AL</span> ouvre PR <span>#47</span> · ATLAS</div></div>
+        <div class="act"><div class="act-time">08:55</div><div class="act-dot" style="background:#E24B4A"></div><div class="act-text"><span>SK</span> signale bug <span>critique</span></div></div>
+        <div class="act"><div class="act-time">08:30</div><div class="act-dot" style="background:#00d4ff"></div><div class="act-text"><span>ND</span> déploie <span>staging</span> · HELIX</div></div>
+        <div class="act"><div class="act-time">08:10</div><div class="act-dot" style="background:#5DCAA5"></div><div class="act-text"><span>MR</span> merge <span>feature/ui</span></div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="sec-label">COMMITS / 7 JOURS</div>
+      <div class="mini-chart" id="mini-chart"></div>
+      <div style="display:flex;gap:4px" id="mini-labels"></div>
+    </div>
+  </div>
+</div>
+
+<div class="sec-label">KANBAN — PROJET SÉLECTIONNÉ</div>
+<div class="tasks-row">
+  <div class="task-col">
+    <div class="task-col-hdr todo">À FAIRE</div>
+    <div class="task-item">Refonte page d'accueil<span class="task-tag">NOVA · MR</span></div>
+    <div class="task-item">Tests unitaires auth<span class="task-tag">PRISM · AL</span></div>
+    <div class="task-item">Doc API endpoints<span class="task-tag">ATLAS · ND</span></div>
+  </div>
+  <div class="task-col">
+    <div class="task-col-hdr prog">EN COURS</div>
+    <div class="task-item">Intégration WebSocket<span class="task-tag">NOVA · MR</span></div>
+    <div class="task-item">Optimisation requêtes<span class="task-tag">ATLAS · AL</span></div>
+    <div class="task-item">Migration PostgreSQL<span class="task-tag">HELIX · SK</span></div>
+  </div>
+  <div class="task-col">
+    <div class="task-col-hdr done2">TERMINÉ</div>
+    <div class="task-item">Setup CI/CD pipeline<span class="task-tag">ND</span></div>
+    <div class="task-item">Design system tokens<span class="task-tag">SK</span></div>
+    <div class="task-item">Auth JWT module<span class="task-tag">AL</span></div>
+  </div>
+</div>
+
+<div class="btn-row">
+  <button class="jv-btn primary" onclick="sendPrompt('Génère un rapport de sprint pour le projet NOVA avec les métriques actuelles')">RAPPORT SPRINT ↗</button>
+  <button class="jv-btn" onclick="sendPrompt('Quelles sont les meilleures pratiques pour réduire les bugs critiques en développement ?')">ANALYSER BUGS ↗</button>
+  <button class="jv-btn" onclick="sendPrompt('Propose un plan de déploiement pour le projet HELIX qui est à 91%')">PLAN DÉPLOIEMENT ↗</button>
+</div>
+
+</div>
+
+<script>
+function tick() {
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toLocaleTimeString('fr-FR');
+}
+tick();
+setInterval(tick, 1000);
+
+const commits = [4,7,3,12,9,6,12];
+const days = ['L','M','M','J','V','S','D'];
+const mc = document.getElementById('mini-chart');
+const ml = document.getElementById('mini-labels');
+const maxC = Math.max(...commits);
+commits.forEach((v,i) => {
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;gap:2px';
+  const bar = document.createElement('div');
+  const h = Math.round((v/maxC)*40);
+  bar.style.cssText = `width:100%;height:${h}px;background:rgba(0,212,255,${i===6?'0.6':'0.2'});border-radius:1px;align-self:flex-end;transition:background 0.2s;cursor:default`;
+  bar.title = `${v} commits`;
+  bar.addEventListener('mouseover', () => bar.style.background = 'rgba(0,212,255,0.5)');
+  bar.addEventListener('mouseout', () => bar.style.background = `rgba(0,212,255,${i===6?'0.6':'0.2'})`);
+  const lbl = document.createElement('div');
+  lbl.style.cssText = 'font-size:8px;color:rgba(0,212,255,0.2);font-family:Share Tech Mono,monospace;text-align:center';
+  lbl.textContent = days[i];
+  mc.appendChild(bar);
+  ml.appendChild(wrap);
+  wrap.appendChild(lbl);
+});
+
+function selectProj(el) {
+  document.querySelectorAll('.proj').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+</script>

@@ -1,0 +1,228 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+.jv{background:#050c12;min-height:600px;padding:28px 24px;font-family:'Share Tech Mono',monospace;color:#00d4ff;position:relative;overflow:hidden;border-radius:12px}
+.jv-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+.jv-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid rgba(0,212,255,0.12)}
+.jv-logo{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:900;letter-spacing:0.2em;color:#00d4ff}
+.jv-status{display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:0.15em;color:rgba(0,212,255,0.5)}
+.jv-dot{width:6px;height:6px;border-radius:50%;background:#00d4ff;animation:jvpulse 1.8s ease-in-out infinite}
+@keyframes jvpulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.jv-section{margin-bottom:20px}
+.jv-label{font-size:10px;letter-spacing:0.2em;color:rgba(0,212,255,0.4);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.jv-label::after{content:'';flex:1;height:1px;background:rgba(0,212,255,0.1)}
+.jv-chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:6px 14px;border:1px solid rgba(0,212,255,0.2);background:rgba(0,212,255,0.04);color:rgba(0,212,255,0.6);font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:0.08em;cursor:pointer;transition:all 0.15s;border-radius:2px}
+.chip:hover{border-color:rgba(0,212,255,0.5);color:#00d4ff;background:rgba(0,212,255,0.08)}
+.chip.active{border-color:#00d4ff;color:#00d4ff;background:rgba(0,212,255,0.14)}
+.jv-input-wrap{position:relative}
+.jv-input{width:100%;background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.2);color:#00d4ff;font-family:'Share Tech Mono',monospace;font-size:12px;padding:12px 14px;outline:none;transition:border-color 0.2s;border-radius:2px}
+.jv-input:focus{border-color:rgba(0,212,255,0.6)}
+.jv-input::placeholder{color:rgba(0,212,255,0.25)}
+select.jv-input{cursor:pointer;appearance:none}
+option{background:#050c12;color:#00d4ff}
+.jv-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.jv-generate{width:100%;padding:14px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.4);color:#00d4ff;font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:0.25em;cursor:pointer;transition:all 0.2s;margin-top:4px;border-radius:2px;display:flex;align-items:center;justify-content:center;gap:10px}
+.jv-generate:hover{background:rgba(0,212,255,0.18);border-color:#00d4ff}
+.jv-generate:active{transform:scale(0.98)}
+.spin-ring{width:14px;height:14px;border-radius:50%;border:2px solid rgba(0,212,255,0.3);border-top-color:#00d4ff;animation:jvspin 0.8s linear infinite;display:none}
+@keyframes jvspin{to{transform:rotate(360deg)}}
+.jv-output{background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.15);padding:16px;min-height:100px;font-size:12px;line-height:1.8;color:rgba(0,212,255,0.9);position:relative;border-radius:2px;margin-top:4px}
+.jv-output-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.jv-output-label{font-size:10px;letter-spacing:0.2em;color:rgba(0,212,255,0.35)}
+.jv-copy{padding:4px 12px;border:1px solid rgba(0,212,255,0.2);background:transparent;color:rgba(0,212,255,0.5);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.1em;cursor:pointer;transition:all 0.15s;border-radius:2px}
+.jv-copy:hover{border-color:rgba(0,212,255,0.5);color:#00d4ff}
+.jv-output-text{color:rgba(0,212,255,0.85);font-size:12px;line-height:1.85;white-space:pre-wrap}
+.jv-placeholder{color:rgba(0,212,255,0.2);font-size:11px;letter-spacing:0.05em}
+.cursor{display:inline-block;width:8px;height:13px;background:#00d4ff;animation:blink 1s step-end infinite;vertical-align:middle;margin-left:2px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.send-btn{margin-top:12px;width:100%;padding:10px;background:transparent;border:1px solid rgba(0,212,255,0.15);color:rgba(0,212,255,0.5);font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:0.12em;cursor:pointer;transition:all 0.15s;border-radius:2px}
+.send-btn:hover{border-color:rgba(0,212,255,0.4);color:#00d4ff;background:rgba(0,212,255,0.06)}
+</style>
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden">Générateur de prompts IA style Jarvis</h2>
+
+<div class="jv">
+  <div class="jv-grid"></div>
+
+  <div class="jv-header">
+    <div class="jv-logo">J.A.R.V.I.S</div>
+    <div style="font-size:10px;letter-spacing:0.15em;color:rgba(0,212,255,0.35)">PROMPT GENERATOR · v2.4</div>
+    <div class="jv-status"><div class="jv-dot"></div>SYSTÈME EN LIGNE</div>
+  </div>
+
+  <div class="jv-section">
+    <div class="jv-label">TYPE DE TÂCHE</div>
+    <div class="jv-chips" id="type-chips">
+      <div class="chip active" data-val="rédaction">Rédaction</div>
+      <div class="chip" data-val="code">Code</div>
+      <div class="chip" data-val="analyse">Analyse</div>
+      <div class="chip" data-val="brainstorming">Brainstorming</div>
+      <div class="chip" data-val="résumé">Résumé</div>
+      <div class="chip" data-val="traduction">Traduction</div>
+    </div>
+  </div>
+
+  <div class="jv-section">
+    <div class="jv-label">SUJET / CONTEXTE</div>
+    <div class="jv-input-wrap">
+      <input class="jv-input" id="subject" type="text" placeholder="Ex: un email de candidature pour un poste dev...">
+    </div>
+  </div>
+
+  <div class="jv-section">
+    <div class="jv-row">
+      <div>
+        <div class="jv-label">TON</div>
+        <select class="jv-input" id="tone">
+          <option value="professionnel">Professionnel</option>
+          <option value="décontracté">Décontracté</option>
+          <option value="technique">Technique</option>
+          <option value="créatif">Créatif</option>
+          <option value="persuasif">Persuasif</option>
+          <option value="pédagogique">Pédagogique</option>
+        </select>
+      </div>
+      <div>
+        <div class="jv-label">PUBLIC CIBLE</div>
+        <select class="jv-input" id="audience">
+          <option value="grand public">Grand public</option>
+          <option value="experts">Experts</option>
+          <option value="développeurs">Développeurs</option>
+          <option value="managers">Managers</option>
+          <option value="débutants">Débutants</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="jv-section">
+    <div class="jv-label">OPTIONS AVANCÉES</div>
+    <div class="jv-chips" id="opt-chips">
+      <div class="chip" data-val="exemples">+ Exemples</div>
+      <div class="chip" data-val="étapes">Étape par étape</div>
+      <div class="chip" data-val="contraintes">Ajouter contraintes</div>
+      <div class="chip" data-val="format JSON">Format JSON</div>
+      <div class="chip" data-val="rôle">Jeu de rôle</div>
+    </div>
+  </div>
+
+  <button class="jv-generate" id="gen-btn" onclick="generatePrompt()">
+    <div class="spin-ring" id="spinner"></div>
+    <span id="gen-label">GÉNÉRER LE PROMPT</span>
+  </button>
+
+  <div style="margin-top:20px">
+    <div class="jv-output-header">
+      <div class="jv-label" style="margin-bottom:0">PROMPT GÉNÉRÉ</div>
+      <button class="jv-copy" onclick="copyPrompt()">COPIER</button>
+    </div>
+    <div class="jv-output">
+      <div class="jv-output-text" id="output-text"><span class="jv-placeholder">// Sélectionne tes paramètres et génère un prompt optimisé...</span></div>
+    </div>
+    <button class="send-btn" id="send-btn" style="display:none" onclick="sendToChat()">UTILISER CE PROMPT DANS LE CHAT ↗</button>
+  </div>
+</div>
+
+<script>
+let activeType = 'rédaction';
+let activeOpts = new Set();
+let generatedPrompt = '';
+
+document.querySelectorAll('#type-chips .chip').forEach(c => {
+  c.addEventListener('click', () => {
+    document.querySelectorAll('#type-chips .chip').forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+    activeType = c.dataset.val;
+  });
+});
+
+document.querySelectorAll('#opt-chips .chip').forEach(c => {
+  c.addEventListener('click', () => {
+    if(activeOpts.has(c.dataset.val)) { activeOpts.delete(c.dataset.val); c.classList.remove('active'); }
+    else { activeOpts.add(c.dataset.val); c.classList.add('active'); }
+  });
+});
+
+function buildPrompt() {
+  const subject = document.getElementById('subject').value.trim() || 'un sujet de ton choix';
+  const tone = document.getElementById('tone').value;
+  const audience = document.getElementById('audience').value;
+  const opts = [...activeOpts];
+
+  const typeMap = {
+    'rédaction': `Tu es un expert en rédaction. Rédige ${subject}`,
+    'code': `Tu es un développeur senior. Écris du code pour ${subject}`,
+    'analyse': `Tu es un analyste expert. Analyse en profondeur ${subject}`,
+    'brainstorming': `Tu es un consultant créatif. Génère 10 idées originales autour de ${subject}`,
+    'résumé': `Tu es un expert en synthèse. Résume de façon concise ${subject}`,
+    'traduction': `Tu es un traducteur professionnel. Traduis et adapte ${subject}`
+  };
+
+  let prompt = typeMap[activeType] || `Aide-moi avec ${subject}`;
+  prompt += `.\n\nTon : ${tone}.\nPublic cible : ${audience}.`;
+
+  if(opts.includes('exemples')) prompt += '\nInclus des exemples concrets pour illustrer chaque point.';
+  if(opts.includes('étapes')) prompt += '\nStructure ta réponse en étapes claires et numérotées.';
+  if(opts.includes('contraintes')) prompt += '\nRespecte ces contraintes : sois précis, va à l\'essentiel, maximum 300 mots.';
+  if(opts.includes('format JSON')) prompt += '\nRetourne le résultat au format JSON structuré.';
+  if(opts.includes('rôle')) prompt += `\nAdopte le rôle d'un expert reconnu dans ce domaine et réponds depuis cette perspective.`;
+
+  prompt += '\n\nRéponds directement, sans introduction ni conclusion superflue.';
+  return prompt;
+}
+
+function typeWriter(text, el, cb) {
+  el.innerHTML = '';
+  let i = 0;
+  const cur = document.createElement('span');
+  cur.className = 'cursor';
+  el.appendChild(cur);
+  const iv = setInterval(() => {
+    if(i < text.length) {
+      el.insertBefore(document.createTextNode(text[i]), cur);
+      i++;
+    } else {
+      clearInterval(iv);
+      cur.remove();
+      if(cb) cb();
+    }
+  }, 14);
+}
+
+function generatePrompt() {
+  const btn = document.getElementById('gen-btn');
+  const spinner = document.getElementById('spinner');
+  const label = document.getElementById('gen-label');
+  const out = document.getElementById('output-text');
+  const sendBtn = document.getElementById('send-btn');
+
+  spinner.style.display = 'block';
+  label.textContent = 'ANALYSE EN COURS...';
+  btn.disabled = true;
+  sendBtn.style.display = 'none';
+
+  setTimeout(() => {
+    generatedPrompt = buildPrompt();
+    spinner.style.display = 'none';
+    label.textContent = 'GÉNÉRER LE PROMPT';
+    btn.disabled = false;
+    typeWriter(generatedPrompt, out, () => {
+      sendBtn.style.display = 'block';
+    });
+  }, 900);
+}
+
+function copyPrompt() {
+  if(!generatedPrompt) return;
+  navigator.clipboard.writeText(generatedPrompt).catch(() => {});
+  const btn = document.querySelector('.jv-copy');
+  btn.textContent = 'COPIÉ !';
+  setTimeout(() => btn.textContent = 'COPIER', 1500);
+}
+
+function sendToChat() {
+  if(generatedPrompt) sendPrompt(generatedPrompt);
+}
+</script>
